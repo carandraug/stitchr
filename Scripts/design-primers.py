@@ -50,13 +50,16 @@ def stitchr(v, j, cdr3):
         raise RuntimeError('reached end of ouput but no sequence found:\n%s'
                            % ('\n'.join(warning_lines)))
 
+def chomp_and_split_line(line):
+    return line[:-1].split('\t')
+
 def make_up_primers(seq, common_forward, common_reverse):
     forward_primer = common_forward + seq[:18]
     reverse_primer = common_reverse + str(Seq(seq[-18:]).reverse_complement())
     return (forward_primer, reverse_primer)
 
 def process_line(line):
-    fields = line[:-1].split('\t')
+    fields = chomp_and_split_line(line)
 
     tcr_clone = fields[0]
     alpha_full_length = stitchr(fields[2], fields[3], fields[1])
@@ -90,7 +93,11 @@ def main(argv):
 
     fname = argv[1]
     fhandle = open(fname, 'r')
-    next(fhandle) # ignore header line
+
+    header_fields = chomp_and_split_line(next(fhandle))
+    if header_fields != ['TCR clone','CDR3alpha1','V','J','CDR3beta1','V','J']:
+        raise RuntimeError('unexpected header')
+
     print('\t'.join(['TCR clone', 'alpha forward', 'alpha reverse',
                      'beta forward', 'beta reverse', 'alpha full V-J',
                      'beta full V-J']))
