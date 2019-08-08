@@ -117,7 +117,7 @@ def sort_input(cmd_line_args):
     # Check the CDR3
     if (len(tidied_args['cdr3']) < 8
         or tidied_args['cdr3'][0] not in ['C', 'V', 'Y']
-        or tidied_args['cdr3'][-1] not in ['F', 'W', 'C']):
+        or tidied_args['cdr3'][-1] not in ['F', 'W', 'C', 'V']):
         print "Error, CDR3 does not fit expected parameters. Please ensure it includes the conserved C/F residues."
         sys.exit()
 
